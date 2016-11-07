@@ -32,6 +32,13 @@
 // Please contact the author of this library if you have any questions.
 // Author: Victor Fragoso (victor.fragoso@mail.wvu.edu)
 
+// Use the right namespace for google flags (gflags).
+#ifdef GFLAGS_NAMESPACE_GOOGLE
+#define GLUTILS_GFLAGS_NAMESPACE google
+#else
+#define GLUTILS_GFLAGS_NAMESPACE gflags
+#endif
+
 // Include first C-Headers.
 #define _USE_MATH_DEFINES  // For using M_PI.
 #include <cmath>
@@ -56,9 +63,21 @@
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>
+#include <gflags/gflags.h>
+#include <glog/logging.h>
 
 // Include system headers.
 #include "shader_program.h"
+
+// Google flags.
+// (<name of the flag>, <default value>, <Brief description of flat>)
+// These will define global variables w/ the following format
+// FLAGS_vertex_shader_filepath and 
+// FLAGS_fragment_shader_filepath.
+DEFINE_string(vertex_shader_filepath, "", 
+              "Filepath of the vertex shader.");
+DEFINE_string(fragment_shader_filepath, "",
+              "Filepath of the fragment shader.");
 
 // Annonymous namespace for constants and helper functions.
 namespace {
@@ -421,6 +440,8 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
 }  // namespace
 
 int main(int argc, char** argv) {
+  GLUTILS_GFLAGS_NAMESPACE::ParseCommandLineFlags(&argc, &argv, true);
+  google::InitGoogleLogging(argv[0]);
   // Initialize the GLFW library.
   if (!glfwInit()) {
     return -1;
@@ -462,9 +483,13 @@ int main(int argc, char** argv) {
 
   // Compile shaders and create shader program.
   // TODO(vfragoso): Set the variables from flags.
-  const std::string vertex_shader_filepath;
-  const std::string fragment_shader_filepath; 
+  const std::string vertex_shader_filepath = 
+    FLAGS_vertex_shader_filepath;
+  const std::string fragment_shader_filepath =
+    FLAGS_fragment_shader_filepath;
   wvu::ShaderProgram shader_program;
+  std::cout << vertex_shader_filepath << std::endl;
+  std::cout << fragment_shader_filepath << std::endl;
   shader_program.LoadVertexShaderFromFile(vertex_shader_filepath);
   shader_program.LoadFragmentShaderFromFile(fragment_shader_filepath);
   std::string error_info_log;
