@@ -74,6 +74,8 @@
 // These will define global variables w/ the following format
 // FLAGS_vertex_shader_filepath and 
 // FLAGS_fragment_shader_filepath.
+// DEFINE_<type>(name of flag, default value, brief description.)
+// types: string, int32, bool.
 DEFINE_string(vertex_shader_filepath, "", 
               "Filepath of the vertex shader.");
 DEFINE_string(fragment_shader_filepath, "",
@@ -407,6 +409,9 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
     glGetUniformLocation(shader_program.shader_program_id(), "view");
   const GLint projection_location = 
     glGetUniformLocation(shader_program.shader_program_id(), "projection");
+  // When variable is not found you get a - 1.
+  const GLint color_location =
+    glGetUniformLocation(shader_program.shader_program_id(), "vertex_color");
   Eigen::Matrix4f translation = 
     ComputeTranslation(Eigen::Vector3f(0.0f, 0.0f, -5.0f));
   Eigen::Matrix4f rotation = 
@@ -420,6 +425,7 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
   glUniformMatrix4fv(model_location, 1, GL_FALSE, model.data());
   glUniformMatrix4fv(view_location, 1, GL_FALSE, view.data());
   glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.data());
+  glUniform4f(color_location, 1.0f, 0.5f, 0.2f, 1.0f);
   // Draw the triangle.
   // Let OpenGL know what vertex array object we will use.
   glBindVertexArray(vertex_array_object_id);
@@ -482,7 +488,7 @@ int main(int argc, char** argv) {
   ConfigureViewPort(window);
 
   // Compile shaders and create shader program.
-  // TODO(vfragoso): Set the variables from flags.
+  // This is how we access the flags.
   const std::string vertex_shader_filepath = 
     FLAGS_vertex_shader_filepath;
   const std::string fragment_shader_filepath =

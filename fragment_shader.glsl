@@ -40,8 +40,11 @@
 
 #version 330 core
 
+uniform vec4 vertex_color;
+// This was an example on how to pass variables from shader to shader.
+// in vec4 vertex_color;
 out vec4 color;
 
 void main() {
-  color = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+  color = vertex_color;
 }
