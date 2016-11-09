@@ -425,7 +425,9 @@ void RenderScene(const wvu::ShaderProgram& shader_program,
   glUniformMatrix4fv(model_location, 1, GL_FALSE, model.data());
   glUniformMatrix4fv(view_location, 1, GL_FALSE, view.data());
   glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.data());
-  glUniform4f(color_location, 1.0f, 0.5f, 0.2f, 1.0f);
+  GLfloat color_scalar = static_cast<GLfloat>(glfwGetTime());
+  glUniform4f(color_location, 0.0f, 
+            sin(0.5 * color_scalar) * 1.0f, 0.0f, 1.0f);
   // Draw the triangle.
   // Let OpenGL know what vertex array object we will use.
   glBindVertexArray(vertex_array_object_id);
@@ -512,17 +514,23 @@ int main(int argc, char** argv) {
   GLuint vertex_buffer_object_id;
   GLuint vertex_array_object_id;
   GLuint element_buffer_object_id;
-  Eigen::MatrixXf vertices(3, 10);
-  vertices.col(0) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
-  vertices.col(1) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
-  vertices.col(2) = Eigen::Vector3f(1.0f, 1.0f, 0.0f);
-  vertices.col(3) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
-  vertices.col(4) = Eigen::Vector3f(1.0f, 1.0f, -1.0f);
-  vertices.col(5) = Eigen::Vector3f(1.0f, 0.0f, -1.0f);
-  vertices.col(6) = Eigen::Vector3f(0.0f, 1.0f, -1.0f);
-  vertices.col(7) = Eigen::Vector3f(0.0f, 0.0f, -1.0f);
-  vertices.col(8) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
-  vertices.col(9) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+  Eigen::MatrixXf vertices(6, 10);
+  // Vertex 0.
+  vertices.block(0, 0, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  vertices.block(3, 0, 3, 1) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
+  // Vertex 1.
+  vertices.block(0, 1, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+  vertices.block(3, 1, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  // vertices.col(0) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  // vertices.col(1) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+  // vertices.col(2) = Eigen::Vector3f(1.0f, 1.0f, 0.0f);
+  // vertices.col(3) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
+  // vertices.col(4) = Eigen::Vector3f(1.0f, 1.0f, -1.0f);
+  // vertices.col(5) = Eigen::Vector3f(1.0f, 0.0f, -1.0f);
+  // vertices.col(6) = Eigen::Vector3f(0.0f, 1.0f, -1.0f);
+  // vertices.col(7) = Eigen::Vector3f(0.0f, 0.0f, -1.0f);
+  // vertices.col(8) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  // vertices.col(9) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
   std::vector<GLuint> indices = {
     0, 1, 3,  // First triangle.
     0, 3, 2,  // Second triangle.
