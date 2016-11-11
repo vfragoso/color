@@ -361,12 +361,16 @@ GLuint SetVertexBufferObject(const Model& model) {
   // A vertex right now contains 3 elements because we have x, y, z. But we can
   // add more information per vertex as we will see shortly.
   constexpr GLuint kNumElementsPerVertex = 3;
-  constexpr GLuint kStride = kNumElementsPerVertex * sizeof(vertices(0, 0));
+  constexpr GLuint kStride = 2 * kNumElementsPerVertex * sizeof(vertices(0, 0));
   const GLvoid* offset_ptr = nullptr;
   glVertexAttribPointer(kIndex, kNumElementsPerVertex, GL_FLOAT, GL_FALSE,
                         kStride, offset_ptr);
   // Set as active our newly generated VBO.
   glEnableVertexAttribArray(kIndex);
+  const GLvoid* offset_color = reinterpret_cast<GLvoid*>(3 * sizeof(vertices(0, 0)));
+  glVertexAttribPointer(1, kNumElementsPerVertex, GL_FLOAT, GL_FALSE,
+                        kStride, offset_color);
+  glEnableVertexAttribArray(1);
   // Unbind buffer so that later we can use it.
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   return vertex_buffer_object_id;
@@ -521,6 +525,30 @@ int main(int argc, char** argv) {
   // Vertex 1.
   vertices.block(0, 1, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
   vertices.block(3, 1, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  // Vertex 2.
+  vertices.block(0, 2, 3, 1) = Eigen::Vector3f(1.0f, 1.0f, 0.0f);
+  vertices.block(3, 2, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, 1.0f);
+  // Vertex 3.
+  vertices.block(0, 3, 3, 1) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
+  vertices.block(3, 3, 3, 1) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
+  // Vertex 4.
+  vertices.block(0, 4, 3, 1) = Eigen::Vector3f(1.0f, 1.0f, -1.0f);
+  vertices.block(3, 4, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  // Vertex 5.
+  vertices.block(0, 5, 3, 1) = Eigen::Vector3f(1.0f, 0.0f, -1.0f);
+  vertices.block(3, 5, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, 1.0f);  
+  // Vertex 6.
+  vertices.block(0, 6, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, -1.0f);
+  vertices.block(3, 6, 3, 1) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
+  // Vertex 7.
+  vertices.block(0, 7, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, -1.0f);
+  vertices.block(3, 7, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  // Vertex 8.
+  vertices.block(0, 8, 3, 1) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
+  vertices.block(3, 8, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, 1.0f);
+  // Vertex 9.
+  vertices.block(0, 9, 3, 1) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
+  vertices.block(3, 9, 3, 1) = Eigen::Vector3f(1.0f, 0.0f, 0.0f);
   // vertices.col(0) = Eigen::Vector3f(0.0f, 1.0f, 0.0f);
   // vertices.col(1) = Eigen::Vector3f(0.0f, 0.0f, 0.0f);
   // vertices.col(2) = Eigen::Vector3f(1.0f, 1.0f, 0.0f);

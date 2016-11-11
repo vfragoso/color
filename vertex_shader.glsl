@@ -46,16 +46,18 @@
 #version 330 core
 
 layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 passed_color;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 // Passing variables from shader to shader.
-// out vec4 vertex_color;
+out vec4 vertex_color;
 
 void main() {
   // Compute MVP.
   gl_Position = projection * view * model * vec4(position, 1.0f);
   // This was an example on how to pass variables from shader to shader.
   // vertex_color = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+  vertex_color = vec4(passed_color, 1.0f);
 }
