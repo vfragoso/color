@@ -305,9 +305,10 @@ void ConfigureViewPort(GLFWwindow* window) {
 void ClearTheFrameBuffer() {
   // Sets the initial color of the framebuffer in the RGBA, R = Red, G = Green,
   // B = Blue, and A = alpha.
+  glEnable(GL_DEPTH_TEST);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   // Tells OpenGL to clear the Color buffer.
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 GLuint SetElementBufferObject(const Model& model) {
